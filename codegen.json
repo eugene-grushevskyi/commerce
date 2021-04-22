@@ -8,16 +8,16 @@
   },
   "documents": [
     {
-      "./framework/bigcommerce/api/**/*.ts": {
+      "./framework/horeca/api/**/*.ts": {
         "noRequire": true
       }
     }
   ],
   "generates": {
-    "./framework/bigcommerce/schema.d.ts": {
+    "./framework/horeca/schema.d.ts": {
       "plugins": ["typescript", "typescript-operations"]
     },
-    "./framework/bigcommerce/schema.graphql": {
+    "./framework/horeca/schema.graphql": {
       "plugins": ["schema-ast"]
     }
   },

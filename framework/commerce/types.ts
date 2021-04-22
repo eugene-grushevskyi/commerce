@@ -173,6 +173,32 @@ export interface Product extends Entity {
   sku?: string
 }
 
+export class ProductAdapter {
+  static transform(data: any): Product {
+    return {
+      name: data.name || '',
+      description: data.description || '',
+      descriptionHtml: data.descriptionHtml || null,
+      slug: data.slug || null,
+      path: data.path || null,
+      images: data.images || [],
+      variants: [
+        {
+          id: 1,
+          options: [],
+        },
+      ],
+      sku: data.id as string,
+      id: data.id as string,
+      options: [],
+      price: {
+        value: data.price,
+        currencyCode: 'UAH',
+      },
+    }
+  }
+}
+
 interface ProductOption extends Entity {
   displayName: string
   values: ProductOptionValues[]

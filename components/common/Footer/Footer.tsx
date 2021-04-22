@@ -125,20 +125,20 @@ function usePages(pages?: Page[]) {
   const sitePages: Page[] = []
   const legalPages: Page[] = []
 
-  if (pages) {
-    pages.forEach((page) => {
-      const slug = page.url && getSlug(page.url)
+  // if (pages) {
+  //   pages.forEach((page) => {
+  //     const slug = page.url && getSlug(page.url)
 
-      if (!slug) return
-      if (locale && !slug.startsWith(`${locale}/`)) return
+  //     if (!slug) return
+  //     if (locale && !slug.startsWith(`${locale}/`)) return
 
-      if (isLegalPage(slug, locale)) {
-        legalPages.push(page)
-      } else {
-        sitePages.push(page)
-      }
-    })
-  }
+  //     if (isLegalPage(slug, locale)) {
+  //       legalPages.push(page)
+  //     } else {
+  //       sitePages.push(page)
+  //     }
+  //   })
+  // }
 
   return {
     sitePages: sitePages.sort(bySortOrder),
