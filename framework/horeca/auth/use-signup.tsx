@@ -9,7 +9,7 @@ export default useSignup as UseSignup<typeof handler>
 
 export const handler: MutationHook<null, {}, SignupBody, SignupBody> = {
   fetchOptions: {
-    url: '/api/bigcommerce/customers/signup',
+    url: '/api/customers/signup',
     method: 'POST',
   },
   async fetcher({

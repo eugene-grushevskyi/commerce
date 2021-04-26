@@ -2,20 +2,14 @@ import { useCallback } from 'react'
 import type { MutationHook } from '@commerce/utils/types'
 import { CommerceError } from '@commerce/utils/errors'
 import useAddItem, { UseAddItem } from '@commerce/cart/use-add-item'
-import { normalizeCart } from '../lib/normalize'
-import type {
-  Cart,
-  BigcommerceCart,
-  CartItemBody,
-  AddCartItemBody,
-} from '../types'
+import type { Cart, CartItemBody } from '../types'
 import useCart from './use-cart'
 
 export default useAddItem as UseAddItem<typeof handler>
 
 export const handler: MutationHook<Cart, {}, CartItemBody> = {
   fetchOptions: {
-    url: '/api/bigcommerce/cart',
+    url: '/api/cart',
     method: 'POST',
   },
   async fetcher({ input: item, options, fetch }) {
@@ -27,13 +21,14 @@ export const handler: MutationHook<Cart, {}, CartItemBody> = {
         message: 'The item quantity has to be a valid integer greater than 0',
       })
     }
-
-    const data = await fetch<BigcommerceCart, AddCartItemBody>({
+    const data = await fetch<Cart, CartItemBody>({
       ...options,
-      body: { item },
+      body: {
+        ...item,
+      },
     })
 
-    return normalizeCart(data)
+    return data
   },
   useHook: ({ fetch }) => () => {
     const { mutate } = useCart()

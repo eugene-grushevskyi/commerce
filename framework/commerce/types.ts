@@ -1,6 +1,6 @@
-import type { Wishlist as BCWishlist } from '../bigcommerce/api/wishlist'
-import type { Customer as BCCustomer } from '../bigcommerce/api/customers'
-import type { SearchProductsData as BCSearchProductsData } from '../bigcommerce/api/catalog/products'
+import type { Wishlist as BCWishlist } from '../horeca/api/wishlist'
+import type { Customer as BCCustomer } from '../horeca/api/customers'
+import type { SearchProductsData as BCSearchProductsData } from '../horeca/api/catalog/products'
 
 export type Discount = {
   // The value of the discount, can be an amount or percentage

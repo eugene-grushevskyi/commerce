@@ -23,12 +23,27 @@ const fetcher: Fetcher = async ({
   variables,
   body: bodyObj,
 }) => {
+  const config = {
+    storeApiToken: 'test',
+    storeApiClientId: process.env.NEXT_PUBLIC_STORE_API_CLIENT_ID + '',
+    storeApiUrl: process.env.NEXT_PUBLIC_STORE_API_URL + '',
+  }
   const hasBody = Boolean(variables || bodyObj)
   const body = hasBody
     ? JSON.stringify(variables ? { variables } : bodyObj)
     : undefined
-  const headers = hasBody ? { 'Content-Type': 'application/json' } : undefined
-  const res = await fetch(url!, { method, body, headers })
+  const hdrs = hasBody ? { 'Content-Type': 'application/json' } : undefined
+  const headers = {
+    ...hdrs,
+    'X-Auth-Token': config.storeApiToken,
+    'X-Auth-Client': config.storeApiClientId,
+  }
+  const res = await fetch((config.storeApiUrl + url)!, {
+    method,
+    body,
+    headers,
+    credentials: 'include',
+  })
 
   if (res.ok) {
     const { data } = await res.json()

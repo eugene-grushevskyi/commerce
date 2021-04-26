@@ -10,7 +10,7 @@ const getCart: CartHandlers['getCart'] = async ({
   config,
 }) => {
   let result: { data?: BigcommerceCart } = {}
-
+  debugger
   if (cartId) {
     try {
       result = await config.storeApiFetch(

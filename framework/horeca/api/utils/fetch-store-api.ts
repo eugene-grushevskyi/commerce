@@ -22,7 +22,7 @@ export default async function fetchStoreApi<T>(
     })
   } catch (error) {
     throw new BigcommerceNetworkError(
-      `Fetch to Bigcommerce failed: ${error.message}`
+      `Fetch to Bigcommerce failed: ${error} config.storeApiUrl: ${config.storeApiUrl} endpoint: ${endpoint}`
     )
   }
 

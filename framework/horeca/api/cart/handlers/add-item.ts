@@ -14,7 +14,7 @@ const addItem: CartHandlers['addItem'] = async ({
     })
   }
   if (!item.quantity) item.quantity = 1
-
+  debugger
   const options = {
     method: 'POST',
     body: JSON.stringify({

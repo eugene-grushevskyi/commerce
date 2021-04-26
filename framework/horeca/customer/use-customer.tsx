@@ -6,7 +6,7 @@ export default useCustomer as UseCustomer<typeof handler>
 
 export const handler: SWRHook<Customer | null> = {
   fetchOptions: {
-    url: '/api/bigcommerce/customers',
+    url: '/api/customers',
     method: 'GET',
   },
   async fetcher({ options, fetch }) {

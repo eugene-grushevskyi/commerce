@@ -78,7 +78,7 @@ export default function Home({
         ‘Natural’."
       />
       <Grid layout="B">
-        {products.slice(8, 11).map((product, i) => (
+        {products.slice(12, 15).map((product, i) => (
           <ProductCard
             key={product.id}
             product={product}
@@ -90,7 +90,7 @@ export default function Home({
         ))}
       </Grid>
       <Marquee>
-        {products.slice(12, 16).map((product, i) => (
+        {products.slice(8, 11).map((product, i) => (
           <ProductCard
             key={product.id}
             product={product}

@@ -8,13 +8,7 @@ import useRemoveItem, {
   RemoveItemInput as RemoveItemInputBase,
   UseRemoveItem,
 } from '@commerce/cart/use-remove-item'
-import { normalizeCart } from '../lib/normalize'
-import type {
-  RemoveCartItemBody,
-  Cart,
-  BigcommerceCart,
-  LineItem,
-} from '../types'
+import type { RemoveCartItemBody, Cart, LineItem } from '../types'
 import useCart from './use-cart'
 
 export type RemoveItemFn<T = any> = T extends LineItem
@@ -29,7 +23,7 @@ export default useRemoveItem as UseRemoveItem<typeof handler>
 
 export const handler = {
   fetchOptions: {
-    url: '/api/bigcommerce/cart',
+    url: '/api/cart',
     method: 'DELETE',
   },
   async fetcher({
@@ -37,11 +31,11 @@ export const handler = {
     options,
     fetch,
   }: HookFetcherContext<RemoveCartItemBody>) {
-    const data = await fetch<BigcommerceCart>({
+    const data = await fetch<Cart>({
       ...options,
       body: { itemId },
     })
-    return normalizeCart(data)
+    return data
   },
   useHook: ({
     fetch,
