@@ -87,6 +87,44 @@ export function normalizeCart(data: BigcommerceCart): Cart {
   }
 }
 
+export function normalizeHorecaCart(data: any): Cart {
+  return {
+    id: data._id,
+    email: data.email,
+    createdAt: data.createdAt,
+    currency: data.currency,
+    taxesIncluded: data.taxesIncluded,
+    lineItems: data.lineItems.map(normalizeHorecaLineItem),
+    lineItemsSubtotalPrice: data.lineItemsSubtotalPrice,
+    subtotalPrice: data.subtotalPrice,
+    totalPrice: data.totalPrice,
+    discounts: [],
+  }
+}
+
+function normalizeHorecaLineItem(item: any): LineItem {
+  return {
+    id: item.id,
+    variantId: String(item.id),
+    productId: String(item._id),
+    name: item.name,
+    quantity: item.quantity || 1,
+    variant: {
+      id: String(item._id),
+      sku: item.sku,
+      name: item.name,
+      image: {
+        url: item.images[0].url,
+      },
+      requiresShipping: false,
+      price: item.price,
+      listPrice: item.price,
+    },
+    path: item.path,
+    discounts: [],
+  }
+}
+
 function normalizeLineItem(item: any): LineItem {
   return {
     id: item.id,

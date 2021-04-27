@@ -25,8 +25,11 @@ const fetcher: Fetcher = async ({
 }) => {
   const config = {
     storeApiToken: 'test',
-    storeApiClientId: process.env.NEXT_PUBLIC_STORE_API_CLIENT_ID + '',
-    storeApiUrl: process.env.NEXT_PUBLIC_STORE_API_URL + '',
+    storeApiClientId:
+      process.env.NEXT_PUBLIC_STORE_API_CLIENT_ID + '' ||
+      '607fd3f431ffe15641e92ecb',
+    storeApiUrl:
+      process.env.NEXT_PUBLIC_STORE_API_URL + '' || 'http://127.0.0.1:8080',
   }
   const hasBody = Boolean(variables || bodyObj)
   const body = hasBody
