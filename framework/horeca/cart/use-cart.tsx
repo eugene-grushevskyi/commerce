@@ -17,8 +17,8 @@ export const handler: SWRHook<
     method: 'GET',
   },
   async fetcher({ input: { cartId }, options, fetch }) {
-    const data = await fetch<Partial<Cart>>(options) //cartId ? await fetch(options) : null
-    return data && normalizeHorecaCart(data)
+    const { data } = await fetch<{ data: Cart }>(options) //cartId ? await fetch(options) : null
+    return data // && normalizeHorecaCart(data)
   },
   useHook: ({ useData }) => (input) => {
     const response = useData({

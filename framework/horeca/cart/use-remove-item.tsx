@@ -31,7 +31,7 @@ export const handler = {
     options,
     fetch,
   }: HookFetcherContext<RemoveCartItemBody>) {
-    const data = await fetch<Cart>({
+    const { data } = await fetch<{ data: Cart }>({
       ...options,
       body: { itemId },
     })

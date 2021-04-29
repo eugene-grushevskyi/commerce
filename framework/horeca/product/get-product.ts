@@ -104,9 +104,12 @@ async function getProduct({
     hasLocale: !!locale,
     path: slug ? `/${slug}/` : vars.path!,
   }
-  const data = await config.storeApiFetch<Product[]>('/api/product/' + slug, {
-    method: 'GET',
-  })
+  const { data } = await config.storeApiFetch<{ data: Product[] }>(
+    '/api/product/' + slug,
+    {
+      method: 'GET',
+    }
+  )
   if (data) {
     return { product: ProductAdapter.transform(data) }
   } else {

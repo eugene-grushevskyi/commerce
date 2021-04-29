@@ -181,7 +181,14 @@ export class ProductAdapter {
       descriptionHtml: data.descriptionHtml || null,
       slug: data.slug || null,
       path: data.path || null,
-      images: data.images || [],
+      images:
+        data.images instanceof Array && data.images.length
+          ? data.images
+          : [
+              {
+                url: null,
+              },
+            ],
       variants: [
         {
           id: 1,

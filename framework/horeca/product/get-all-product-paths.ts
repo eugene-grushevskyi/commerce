@@ -1,40 +1,9 @@
-import type {
-  GetAllProductPathsQuery,
-  GetAllProductPathsQueryVariables,
-} from '../schema'
-import type { RecursivePartial, RecursiveRequired } from '../api/utils/types'
-import filterEdges from '../api/utils/filter-edges'
+import { Product, ProductAdapter } from '@commerce/types'
 import { BigcommerceConfig, getConfig } from '../api'
-import { ProductAdapter } from '@commerce/types'
-
-export const getAllProductPathsQuery = /* GraphQL */ `
-  query getAllProductPaths($first: Int = 100) {
-    site {
-      products(first: $first) {
-        edges {
-          node {
-            path
-          }
-        }
-      }
-    }
-  }
-`
-
-export type ProductPath = NonNullable<
-  NonNullable<GetAllProductPathsQuery['site']['products']['edges']>[0]
->
-
-export type ProductPaths = ProductPath[]
-
-export type { GetAllProductPathsQueryVariables }
-
-export type GetAllProductPathsResult<
-  T extends { products: any[] } = { products: ProductPaths }
-> = T
+import type { GetAllProductPathsQueryVariables } from '../schema'
 
 async function getAllProductPaths({
-  query = getAllProductPathsQuery,
+  query,
   variables,
   config,
 }: {
@@ -45,7 +14,7 @@ async function getAllProductPaths({
   config = getConfig(config)
   // RecursivePartial forces the method to check for every prop in the data, which is
   // required in case there's a custom `query`
-  const data = await config.storeApiFetch<any[]>(
+  const { data } = await config.storeApiFetch<{ data: Product[] }>(
     '/api/product/all?clientId=' + config.storeApiClientId,
     { method: 'GET' }
   )

@@ -100,7 +100,7 @@ async function getAllProducts({
 
   // RecursivePartial forces the method to check for every prop in the data, which is
   // required in case there's a custom `query`
-  const data = await config.storeApiFetch<Product[]>(
+  const { data } = await config.storeApiFetch<{ data: Product[] }>(
     '/api/product/all?clientId=' + config.storeApiClientId,
     { method: 'GET' }
   )

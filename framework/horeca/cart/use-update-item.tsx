@@ -49,7 +49,7 @@ export const handler = {
         message: 'The item quantity has to be a valid integer',
       })
     }
-
+    // TODO check;
     const data = await fetch<BigcommerceCart, UpdateCartItemBody>({
       ...options,
       body: { itemId, item },
