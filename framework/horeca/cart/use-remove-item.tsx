@@ -31,11 +31,18 @@ export const handler = {
     options,
     fetch,
   }: HookFetcherContext<RemoveCartItemBody>) {
-    const { data } = await fetch<{ data: Cart }>({
+    const data = await fetch<{ data: Cart | null }>({
       ...options,
       body: { itemId },
     })
-    return data
+    return (
+      data || {
+        lineItems: [],
+        currency: {
+          code: 'UAH',
+        },
+      }
+    )
   },
   useHook: ({
     fetch,

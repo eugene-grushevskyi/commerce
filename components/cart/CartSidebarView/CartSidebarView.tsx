@@ -99,7 +99,7 @@ const CartSidebarView: FC = () => {
             <ul className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-accents-3 border-t border-accents-3">
               {data!.lineItems.map((item: any) => (
                 <CartItem
-                  key={item.id}
+                  key={'t' + item.id}
                   item={item}
                   currencyCode={data!.currency.code}
                 />

@@ -9,7 +9,6 @@ import useUpdateItem, {
   UpdateItemInput as UpdateItemInputBase,
   UseUpdateItem,
 } from '@commerce/cart/use-update-item'
-import { normalizeCart } from '../lib/normalize'
 import type {
   UpdateCartItemBody,
   Cart,
@@ -49,13 +48,12 @@ export const handler = {
         message: 'The item quantity has to be a valid integer',
       })
     }
-    // TODO check;
-    const data = await fetch<BigcommerceCart, UpdateCartItemBody>({
+    const data = await fetch<Cart, UpdateCartItemBody>({
       ...options,
       body: { itemId, item },
     })
 
-    return normalizeCart(data)
+    return data
   },
   useHook: ({
     fetch,
