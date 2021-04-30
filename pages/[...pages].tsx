@@ -18,7 +18,7 @@ export async function getStaticProps({
   locale,
 }: GetStaticPropsContext<{ pages: string[] }>) {
   const config = getConfig({ locale })
-  const pages = await getAllPages({ preview, config })
+  const { pages } = await getAllPages({ preview, config })
   const path = params?.pages.join('/')
   const slug = locale ? `${locale}/${path}` : path
 

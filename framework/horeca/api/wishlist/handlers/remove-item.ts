@@ -28,7 +28,7 @@ const removeItem: WishlistHandlers['removeItem'] = async ({
   }
 
   const result = await config.storeApiFetch<{ data: Wishlist } | null>(
-    `/v3/wishlists/${wishlist.id}/items/${itemId}`,
+    `/api/wishlists/${wishlist.id}/items/${itemId}`,
     { method: 'DELETE' }
   )
   const data = result?.data ?? null

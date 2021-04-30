@@ -1,5 +1,4 @@
-import { Product } from '@commerce/types'
-import getAllProducts, { ProductEdge } from '../../../product/get-all-products'
+// TODO REMOVE!
 import type { ProductsHandlers } from '../products'
 
 const SORT: { [key: string]: string | undefined } = {
@@ -50,30 +49,7 @@ const getProducts: ProductsHandlers['getProducts'] = async ({
   const entityIds = data.map((p) => p.id)
   const found = entityIds.length > 0
 
-  // We want the GraphQL version of each product
-  const graphqlData = await getAllProducts({
-    variables: { first: LIMIT, entityIds },
-    config,
-  })
-
-  // Put the products in an object that we can use to get them by id
-  const productsById = graphqlData.products.reduce<{
-    [k: number]: Product
-  }>((prods, p) => {
-    prods[Number(p.id)] = p
-    return prods
-  }, {})
-
-  const products: Product[] = found ? [] : graphqlData.products
-
-  // Populate the products array with the graphql products, in the order
-  // assigned by the list of entity ids
-  entityIds.forEach((id) => {
-    const product = productsById[id]
-    if (product) products.push(product)
-  })
-
-  res.status(200).json({ data: { products, found } })
+  res.status(200).json({ data: { products: [], found } })
 }
 
 export default getProducts
