@@ -1,29 +1,14 @@
-import type { GetStaticPropsContext } from 'next'
-import { getConfig } from '@framework/api'
-import getAllPages from '@framework/common/get-all-pages'
 import useCart from '@framework/cart/use-cart'
 import usePrice from '@framework/product/use-price'
 import { Layout } from '@components/common'
 import { Button, Input, Text } from '@components/ui'
 import { Bag, Cross, Check, MapPin, CreditCard } from '@components/icons'
 import { CartItem } from '@components/cart'
-import checkout from '@framework/api/checkout'
-import { useCallback } from 'react'
-
-export async function getStaticProps({
-  preview,
-  locale,
-}: GetStaticPropsContext) {
-  const config = getConfig({ locale })
-  const { pages } = await getAllPages({ config, preview })
-  return {
-    props: { pages },
-  }
-}
+import { useCallback, useState } from 'react'
 
 export default function Checkout() {
   const error = null
-  const success = null
+  const [success, setSuccess] = useState<boolean>(false)
   const { data, isLoading, isEmpty } = useCart()
 
   const { price: subTotal } = usePrice(
@@ -41,7 +26,8 @@ export default function Checkout() {
 
   const checkout = useCallback(() => {
     console.log(data)
-  }, [])
+    setSuccess(true)
+  }, [success])
 
   return (
     <div className="grid lg:grid-cols-12 w-full max-w-7xl mx-auto">
@@ -52,10 +38,10 @@ export default function Checkout() {
               <Bag className="absolute" />
             </span>
             <h2 className="pt-6 text-2xl font-bold tracking-wide text-center">
-              Your cart is empty
+              Упс... здається, тут пусто.
             </h2>
             <p className="text-accents-6 px-10 text-center pt-2">
-              Biscuit oat cake wafer icing ice cream tiramisu pudding cupcake.
+              Устрички, ігристе, роли, все чого душа бажає...
             </p>
           </div>
         ) : error ? (
@@ -74,7 +60,7 @@ export default function Checkout() {
               <Check />
             </span>
             <h2 className="pt-6 text-xl font-light text-center">
-              Thank you for your order.
+              Дякуємо за ваше замовлення.
             </h2>
           </div>
         ) : (
@@ -93,10 +79,7 @@ export default function Checkout() {
               ))}
             </ul>
             <div className="my-6">
-              <Text>
-                Before you leave, take a look at these items. We picked them
-                just for you
-              </Text>
+              <Text>Рекомендуємо додати до замовлення</Text>
               <div className="flex py-6 space-x-6">
                 {[1, 2, 3, 4, 5, 6].map((x) => (
                   <div
@@ -111,8 +94,6 @@ export default function Checkout() {
       </div>
       <div className="lg:col-span-4">
         <div className="flex-shrink-0 px-4 py-24 sm:px-6">
-          {/* {process.env.COMMERCE_CUSTOMCHECKOUT_ENABLED && (
-            <> */}
           <div className="px-6 py-6 mb-4">
             <Text>Ім'я</Text>
             <Input></Input>
@@ -130,10 +111,11 @@ export default function Checkout() {
             </div>
             <div className="text-sm text-center font-medium">
               <span className="uppercase">+ Add Shipping Address</span>
-              {/* <span>
-                    1046 Kearny Street.<br/>
-                    San Franssisco, California
-                  </span> */}
+              <span>
+                1046 Kearny Street.
+                <br />
+                San Franssisco, California
+              </span>
             </div>
           </div>
           {/* Payment Method */}
@@ -143,7 +125,7 @@ export default function Checkout() {
               <CreditCard />
             </div>
             <div className="text-sm text-center font-medium">
-              <span className="uppercase">+ Add Payment Method</span>
+              <span className="uppercase">+ Додати метод оплати</span>
               {/* <span>VISA #### #### #### 2345</span> */}
             </div>
           </div>
@@ -152,20 +134,20 @@ export default function Checkout() {
           <div className="border-t border-accents-2">
             <ul className="py-3">
               <li className="flex justify-between py-1">
-                <span>Subtotal</span>
+                <span>Сума</span>
                 <span>{subTotal}</span>
               </li>
               <li className="flex justify-between py-1">
-                <span>Taxes</span>
-                <span>Calculated at checkout</span>
+                <span>Пакування у закладі</span>
+                <span>UAH 5</span>
               </li>
               <li className="flex justify-between py-1">
-                <span>Estimated Shipping</span>
-                <span className="font-bold tracking-wide">FREE</span>
+                <span>Вартість доставки</span>
+                <span className="font-bold tracking-wide">UAH 33</span>
               </li>
             </ul>
             <div className="flex justify-between border-t border-accents-2 py-3 font-bold mb-10">
-              <span>Total</span>
+              <span>Всього</span>
               <span>{total}</span>
             </div>
           </div>
@@ -173,11 +155,11 @@ export default function Checkout() {
             <div className="w-full lg:w-72">
               {isEmpty ? (
                 <Button href="/" Component="a" width="100%">
-                  Continue Shopping
+                  Хочу ще чогось
                 </Button>
               ) : (
                 <Button onClick={checkout} Component="a" width="100%">
-                  Купити
+                  Замовити
                 </Button>
               )}
             </div>

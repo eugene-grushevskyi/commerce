@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import cn from 'classnames'
 import Link from 'next/link'
 import CartItem from '../CartItem'
@@ -10,9 +10,21 @@ import { Bag, Cross, Check } from '@components/icons'
 import useCart from '@framework/cart/use-cart'
 import usePrice from '@framework/product/use-price'
 
+const PACKAGE_PRICE = 5
+
 const CartSidebarView: FC = () => {
   const { closeSidebar } = useUI()
-  const { data, isLoading, isEmpty } = useCart()
+  const { data, isLoading, isEmpty } = useCart({})
+  // const [delivery, setDelivery] = useState(false)
+  const [packagingPrice, setPackagingPrice] = useState(0)
+
+  useEffect(() => {
+    let price = 0
+    data?.lineItems.forEach((v) => {
+      price += PACKAGE_PRICE * v.quantity
+    })
+    setPackagingPrice(price)
+  }, [data])
 
   const { price: subTotal } = usePrice(
     data && {
@@ -60,7 +72,7 @@ const CartSidebarView: FC = () => {
             <Bag className="absolute" />
           </span>
           <h2 className="pt-6 text-2xl font-bold tracking-wide text-center">
-            Your cart is empty
+            Ваша корзина пуста
           </h2>
           <p className="text-accents-3 px-10 text-center pt-2">
             Biscuit oat cake wafer icing ice cream tiramisu pudding cupcake.
@@ -82,7 +94,7 @@ const CartSidebarView: FC = () => {
             <Check />
           </span>
           <h2 className="pt-6 text-xl font-light text-center">
-            Thank you for your order.
+            Дякуємо за замовлення
           </h2>
         </div>
       ) : (
@@ -93,7 +105,7 @@ const CartSidebarView: FC = () => {
                 className="pt-1 pb-4 text-2xl leading-7 font-bold text-base tracking-wide cursor-pointer inline-block"
                 onClick={handleClose}
               >
-                My Cart
+                Замовлення
               </h2>
             </Link>
             <ul className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-accents-3 border-t border-accents-3">
@@ -111,25 +123,27 @@ const CartSidebarView: FC = () => {
             <div className="border-t border-accents-3">
               <ul className="py-3">
                 <li className="flex justify-between py-1">
-                  <span>Subtotal</span>
+                  <span>Вартість у закладі</span>
                   <span>{subTotal}</span>
                 </li>
                 <li className="flex justify-between py-1">
-                  <span>Taxes</span>
-                  <span>Calculated at checkout</span>
+                  <span>Упаковка у закладі</span>
+                  <span>UAH {packagingPrice}.00</span>
                 </li>
-                <li className="flex justify-between py-1">
-                  <span>Estimated Shipping</span>
-                  <span className="font-bold tracking-wide">FREE</span>
-                </li>
+                {/* <li className="flex justify-between py-1">
+                  <span>Доставка</span>
+                  <span className="font-bold tracking-wide">
+                    {delivery ? '33 UAH' : 'FREE'}
+                  </span>
+                </li> */}
               </ul>
               <div className="flex justify-between border-t border-accents-3 py-3 font-bold mb-10">
-                <span>Total</span>
+                <span>Всього</span>
                 <span>{total}</span>
               </div>
             </div>
             <Button href="/checkout" Component="a" width="100%">
-              Proceed to Checkout
+              Оформити замовлення
             </Button>
           </div>
         </>
