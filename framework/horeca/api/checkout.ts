@@ -19,7 +19,7 @@ const checkoutApi: BigcommerceApiHandler<any> = async (req, res, config) => {
       res.redirect('/cart')
       return
     }
-    debugger
+
     const { data } = await config.storeApiFetch(
       `/v3/carts/${cartId}/redirect_urls`,
       {

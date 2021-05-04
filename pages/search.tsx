@@ -306,7 +306,7 @@ export default function Search({
                       hidden: !data.found,
                     })}
                   >
-                    Showing {data.products.length} results{' '}
+                    Showing {data.length} results{' '}
                     {q && (
                       <>
                         for "<strong>{q}</strong>"
@@ -343,7 +343,7 @@ export default function Search({
 
           {data ? (
             <Grid layout="normal">
-              {data.products.map((product: Product) => (
+              {data.map((product: Product) => (
                 <ProductCard
                   variant="simple"
                   key={product.path}

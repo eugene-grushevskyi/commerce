@@ -19,10 +19,10 @@ module.exports = withCommerceConfig({
   },
   rewrites() {
     return [
-      (isBC || isShopify) && {
-        source: '/checkout',
-        destination: '/api/checkout',
-      },
+      // (isBC || isShopify) && {
+      //   source: '/checkout',
+      //   destination: '/api/checkout',
+      // },
       // The logout is also an action so this route is not required, but it's also another way
       // you can allow a logout!
       isBC && {

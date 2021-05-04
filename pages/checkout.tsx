@@ -1,27 +1,14 @@
-import type { GetStaticPropsContext } from 'next'
-import { getConfig } from '@framework/api'
-import getAllPages from '@framework/common/get-all-pages'
 import useCart from '@framework/cart/use-cart'
 import usePrice from '@framework/product/use-price'
 import { Layout } from '@components/common'
-import { Button, Text } from '@components/ui'
+import { Button, Input, Text } from '@components/ui'
 import { Bag, Cross, Check, MapPin, CreditCard } from '@components/icons'
 import { CartItem } from '@components/cart'
+import { useCallback, useState } from 'react'
 
-export async function getStaticProps({
-  preview,
-  locale,
-}: GetStaticPropsContext) {
-  const config = getConfig({ locale })
-  const { pages } = await getAllPages({ config, preview })
-  return {
-    props: { pages },
-  }
-}
-
-export default function Cart() {
+export default function Checkout() {
   const error = null
-  const success = null
+  const [success, setSuccess] = useState<boolean>(false)
   const { data, isLoading, isEmpty } = useCart()
 
   const { price: subTotal } = usePrice(
@@ -36,6 +23,11 @@ export default function Cart() {
       currencyCode: data.currency.code,
     }
   )
+
+  const checkout = useCallback(() => {
+    console.log(data)
+    setSuccess(true)
+  }, [success])
 
   return (
     <div className="grid lg:grid-cols-12 w-full max-w-7xl mx-auto">
@@ -68,14 +60,14 @@ export default function Cart() {
               <Check />
             </span>
             <h2 className="pt-6 text-xl font-light text-center">
-              Дякуємо за замовлення.
+              Дякуємо за ваше замовлення.
             </h2>
           </div>
         ) : (
           <div className="px-4 sm:px-6 flex-1">
-            <Text variant="pageHeading">Моє замовлення</Text>
+            <Text variant="pageHeading">Замовлення</Text>
             <Text variant="sectionHeading">
-              Перегляньте правильність замовлення
+              Перегляньте правильність вашого замовлення
             </Text>
             <ul className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-accents-2 border-b border-accents-2">
               {data!.lineItems.map((item) => (
@@ -102,8 +94,15 @@ export default function Cart() {
       </div>
       <div className="lg:col-span-4">
         <div className="flex-shrink-0 px-4 py-24 sm:px-6">
-          {/* {process.env.COMMERCE_CUSTOMCHECKOUT_ENABLED && (
-            <> */}
+          <div className="px-6 py-6 mb-4">
+            <Text>Ім'я</Text>
+            <Input></Input>
+            <Text>Телефон</Text>
+            <Input></Input>
+            <Text>Адреса/Примітка</Text>
+            <Input></Input>
+          </div>
+
           {/* Shipping Address */}
           {/* Only available with customCheckout set to true - Meaning that the provider does offer checkout functionality. */}
           <div className="rounded-md border border-accents-2 px-6 py-6 mb-4 text-center flex items-center justify-center cursor-pointer hover:border-accents-4">
@@ -112,10 +111,11 @@ export default function Cart() {
             </div>
             <div className="text-sm text-center font-medium">
               <span className="uppercase">+ Add Shipping Address</span>
-              {/* <span>
-                    1046 Kearny Street.<br/>
-                    San Franssisco, California
-                  </span> */}
+              <span>
+                1046 Kearny Street.
+                <br />
+                San Franssisco, California
+              </span>
             </div>
           </div>
           {/* Payment Method */}
@@ -125,7 +125,7 @@ export default function Cart() {
               <CreditCard />
             </div>
             <div className="text-sm text-center font-medium">
-              <span className="uppercase">+ Add Payment Method</span>
+              <span className="uppercase">+ Додати метод оплати</span>
               {/* <span>VISA #### #### #### 2345</span> */}
             </div>
           </div>
@@ -138,7 +138,7 @@ export default function Cart() {
                 <span>{subTotal}</span>
               </li>
               <li className="flex justify-between py-1">
-                <span>Упаковка у закладі</span>
+                <span>Пакування у закладі</span>
                 <span>UAH 5</span>
               </li>
               <li className="flex justify-between py-1">
@@ -155,11 +155,11 @@ export default function Cart() {
             <div className="w-full lg:w-72">
               {isEmpty ? (
                 <Button href="/" Component="a" width="100%">
-                  Продовжити покупки
+                  Хочу ще чогось
                 </Button>
               ) : (
-                <Button href="/checkout" Component="a" width="100%">
-                  Оформити замовлення
+                <Button onClick={checkout} Component="a" width="100%">
+                  Замовити
                 </Button>
               )}
             </div>
@@ -170,4 +170,4 @@ export default function Cart() {
   )
 }
 
-Cart.Layout = Layout
+Checkout.Layout = Layout
