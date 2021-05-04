@@ -53,8 +53,7 @@ const ProductCard: FC<Props> = ({
               </h3>
               <span className={s.productPrice}>
                 {product.price.value}
-                &nbsp;
-                {product.price.currencyCode}
+                &nbsp; UAH
               </span>
             </div>
             {process.env.COMMERCE_WISHLIST_ENABLED && (

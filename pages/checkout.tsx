@@ -9,6 +9,7 @@ import { useCallback, useState } from 'react'
 export default function Checkout() {
   const error = null
   const [success, setSuccess] = useState<boolean>(false)
+  const [deliver, setDeliver] = useState<boolean>(false)
   const { data, isLoading, isEmpty } = useCart()
 
   const { price: subTotal } = usePrice(
@@ -105,17 +106,40 @@ export default function Checkout() {
 
           {/* Shipping Address */}
           {/* Only available with customCheckout set to true - Meaning that the provider does offer checkout functionality. */}
-          <div className="rounded-md border border-accents-2 px-6 py-6 mb-4 text-center flex items-center justify-center cursor-pointer hover:border-accents-4">
+          <div
+            className={
+              deliver
+                ? 'active-delivery'
+                : '' +
+                  ' rounded-md border border-accents-2 px-6 py-6 mb-4 text-center flex items-center justify-center cursor-pointer hover:border-accents-4'
+            }
+            onClick={() => {
+              setDeliver(true)
+            }}
+          >
             <div className="mr-5">
               <MapPin />
             </div>
             <div className="text-sm text-center font-medium">
-              <span className="uppercase">+ Add Shipping Address</span>
-              <span>
-                1046 Kearny Street.
-                <br />
-                San Franssisco, California
-              </span>
+              <span className="uppercase">Вказати адресу</span>
+            </div>
+          </div>
+          <div
+            className={
+              !deliver
+                ? 'active-delivery'
+                : '' +
+                  ' rounded-md border border-accents-2 px-6 py-6 mb-4 text-center flex items-center justify-center cursor-pointer hover:border-accents-4'
+            }
+            onClick={() => {
+              setDeliver(false)
+            }}
+          >
+            <div className="mr-5">
+              <MapPin />
+            </div>
+            <div className="text-sm text-center font-medium">
+              <span className="uppercase">Драйвую пішки</span>
             </div>
           </div>
           {/* Payment Method */}
@@ -125,7 +149,7 @@ export default function Checkout() {
               <CreditCard />
             </div>
             <div className="text-sm text-center font-medium">
-              <span className="uppercase">+ Додати метод оплати</span>
+              <span className="uppercase">Оплата картою</span>
               {/* <span>VISA #### #### #### 2345</span> */}
             </div>
           </div>

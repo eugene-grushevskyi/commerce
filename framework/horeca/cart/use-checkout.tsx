@@ -1,3 +1,3 @@
-export default function useCheckout(data) {
-  return [data]
+export default function useCheckout() {
+  return []
 }

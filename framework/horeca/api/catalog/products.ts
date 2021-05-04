@@ -7,7 +7,10 @@ import createApiHandler, {
 import { BigcommerceApiError } from '../utils/errors'
 import getProducts from './handlers/get-products'
 
-export type SearchProductsData = Product[]
+export type SearchProductsData = {
+  products: Product[]
+  found: boolean
+}
 
 export type ProductsHandlers = {
   getProducts: BigcommerceHandler<

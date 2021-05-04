@@ -32,7 +32,7 @@ import {
   getDesignerPath,
   useSearchMeta,
 } from '@lib/search'
-import { Product } from '@commerce/types'
+import { Product, ProductAdapter } from '@commerce/types'
 
 export async function getStaticProps({
   preview,
@@ -79,6 +79,13 @@ export default function Search({
     brandId: activeBrand?.entityId,
     sort: typeof sort === 'string' ? sort : '',
   })
+
+  const products: Product[] =
+    data?.products.map(
+      (v): Product => {
+        return ProductAdapter.transform(v)
+      }
+    ) || []
 
   const handleClick = (event: any, filter: string) => {
     if (filter !== activeFilter) {
@@ -306,7 +313,7 @@ export default function Search({
                       hidden: !data.found,
                     })}
                   >
-                    Showing {data.length} results{' '}
+                    Showing {products.length} results{' '}
                     {q && (
                       <>
                         for "<strong>{q}</strong>"
@@ -343,10 +350,10 @@ export default function Search({
 
           {data ? (
             <Grid layout="normal">
-              {data.map((product: Product) => (
+              {products.map((product: Product, index) => (
                 <ProductCard
                   variant="simple"
-                  key={product.path}
+                  key={product.path + '' + index}
                   className="animated fadeIn"
                   product={product}
                   imgProps={{
