@@ -128,3 +128,7 @@ a {
   }
 }
 
+.active-delivery, .active-delivery:hover {
+  border-color:  #7048e8 !important;
+  color: #7048e8;
+}

@@ -5,11 +5,23 @@ import { Button, Input, Text } from '@components/ui'
 import { Bag, Cross, Check, MapPin, CreditCard } from '@components/icons'
 import { CartItem } from '@components/cart'
 import { useCallback, useState } from 'react'
+import useCheckout from '@framework/cart/use-checkout'
 
+const PACKAGING_PRICE = 5
+const DELIVER_PRICE = 33
 export default function Checkout() {
-  const error = null
   const [success, setSuccess] = useState<boolean>(false)
+  const [error, setError] = useState<boolean>(false)
   const [deliver, setDeliver] = useState<boolean>(false)
+  const postOrder = useCheckout()
+  const [formData, setFormData] = useState<
+    Partial<{
+      name: string
+      phone: string
+      description: string
+      address: string
+    }>
+  >()
   const { data, isLoading, isEmpty } = useCart()
 
   const { price: subTotal } = usePrice(
@@ -20,15 +32,62 @@ export default function Checkout() {
   )
   const { price: total } = usePrice(
     data && {
-      amount: Number(data.totalPrice),
+      amount: Number(data.totalPrice) + (deliver ? DELIVER_PRICE : 0),
+      currencyCode: data.currency.code,
+    }
+  )
+  const getPackagingPrice = useCallback(() => {
+    let calculatedValue = 0
+    data?.lineItems.forEach((v) => {
+      calculatedValue += v.quantity * PACKAGING_PRICE
+    })
+    return calculatedValue
+  }, [data])
+
+  const { price: packagingPrice } = usePrice(
+    data && {
+      amount: getPackagingPrice(),
       currencyCode: data.currency.code,
     }
   )
 
-  const checkout = useCallback(() => {
-    console.log(data)
-    setSuccess(true)
+  const { price: deliverPrice } = usePrice(
+    data && {
+      amount: deliver ? DELIVER_PRICE : 0,
+      currencyCode: data.currency.code,
+    }
+  )
+
+  const checkout = useCallback(async () => {
+    const body = {
+      initiator: 'site',
+      phone: formData?.phone,
+      name: formData?.name,
+      products: data?.lineItems.map((v) => ({
+        id: v.id,
+        name: v.name,
+        price: v.variant.price,
+        count: v.quantity,
+        total: v.variant.price * v.quantity,
+      })),
+      address: formData?.address,
+    }
+
+    const res = await postOrder(body)
+    console.log(res)
+    if (!res) {
+      setError(true)
+    } else {
+      setSuccess(true)
+    }
   }, [success])
+
+  const handleChange = (data: string, prop: string) => {
+    setFormData({
+      ...formData,
+      [prop]: data,
+    })
+  }
 
   return (
     <div className="grid lg:grid-cols-12 w-full max-w-7xl mx-auto">
@@ -94,24 +153,19 @@ export default function Checkout() {
         )}
       </div>
       <div className="lg:col-span-4">
-        <div className="flex-shrink-0 px-4 py-24 sm:px-6">
-          <div className="px-6 py-6 mb-4">
-            <Text>Ім'я</Text>
-            <Input></Input>
-            <Text>Телефон</Text>
-            <Input></Input>
-            <Text>Адреса/Примітка</Text>
-            <Input></Input>
-          </div>
-
-          {/* Shipping Address */}
-          {/* Only available with customCheckout set to true - Meaning that the provider does offer checkout functionality. */}
+        <div className="flex-shrink-0 px-4 sm:px-6 mt-2">
+          <Text className="mt-4 pb-1">Ім'я</Text>
+          <Input onChange={(e) => handleChange(e, 'name')}></Input>
+          <Text className="mt-4 pb-1">Телефон</Text>
+          <Input onChange={(e) => handleChange(e, 'phone')}></Input>
+          <Text className="mt-4 pb-1">Додаткові побажання?</Text>
+          <Input onChange={(e) => handleChange(e, 'description')}></Input>
+        </div>
+        <div className="flex-shrink-0 px-4 py-8 sm:px-6">
           <div
             className={
-              deliver
-                ? 'active-delivery'
-                : '' +
-                  ' rounded-md border border-accents-2 px-6 py-6 mb-4 text-center flex items-center justify-center cursor-pointer hover:border-accents-4'
+              (deliver ? 'active-delivery' : '') +
+              ' rounded-md border border-accents-2 px-6 py-6 mb-4 text-center flex items-center justify-center cursor-pointer hover:border-accents-4'
             }
             onClick={() => {
               setDeliver(true)
@@ -124,24 +178,29 @@ export default function Checkout() {
               <span className="uppercase">Вказати адресу</span>
             </div>
           </div>
+          {deliver && (
+            <div className="mb-4">
+              <Text className="mt-4 pb-1">Куди доставити?</Text>
+              <Input onChange={(e) => handleChange(e, 'address')}></Input>
+            </div>
+          )}
           <div
             className={
-              !deliver
-                ? 'active-delivery'
-                : '' +
-                  ' rounded-md border border-accents-2 px-6 py-6 mb-4 text-center flex items-center justify-center cursor-pointer hover:border-accents-4'
+              (!deliver ? 'active-delivery' : '') +
+              ' rounded-md border border-accents-2 px-6 py-6 mb-4 text-center flex items-center justify-center cursor-pointer hover:border-accents-4'
             }
             onClick={() => {
               setDeliver(false)
             }}
           >
             <div className="mr-5">
-              <MapPin />
+              <Bag />
             </div>
             <div className="text-sm text-center font-medium">
               <span className="uppercase">Драйвую пішки</span>
             </div>
           </div>
+          <div className="border-t border-accents-2 mb-4 mt-4"></div>
           {/* Payment Method */}
           {/* Only available with customCheckout set to true - Meaning that the provider does offer checkout functionality. */}
           <div className="rounded-md border border-accents-2 px-6 py-6 mb-4 text-center flex items-center justify-center cursor-pointer hover:border-accents-4">
@@ -149,12 +208,10 @@ export default function Checkout() {
               <CreditCard />
             </div>
             <div className="text-sm text-center font-medium">
-              <span className="uppercase">Оплата картою</span>
+              <span className="uppercase">Оплатити картою</span>
               {/* <span>VISA #### #### #### 2345</span> */}
             </div>
           </div>
-          {/* </>
-          )} */}
           <div className="border-t border-accents-2">
             <ul className="py-3">
               <li className="flex justify-between py-1">
@@ -163,11 +220,13 @@ export default function Checkout() {
               </li>
               <li className="flex justify-between py-1">
                 <span>Пакування у закладі</span>
-                <span>UAH 5</span>
+                <span>{packagingPrice}</span>
               </li>
               <li className="flex justify-between py-1">
                 <span>Вартість доставки</span>
-                <span className="font-bold tracking-wide">UAH 33</span>
+                <span className="font-bold tracking-wide">
+                  {deliver ? deliverPrice : 'FREE'}
+                </span>
               </li>
             </ul>
             <div className="flex justify-between border-t border-accents-2 py-3 font-bold mb-10">

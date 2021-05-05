@@ -5,7 +5,3 @@
 @import './components.css';
 
 @tailwind utilities;
-
-.active-delivery {
-  border: 1px solid #7048e8;
-}

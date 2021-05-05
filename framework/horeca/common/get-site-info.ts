@@ -1,48 +1,5 @@
 import type { GetSiteInfoQuery, GetSiteInfoQueryVariables } from '../schema'
-import type { RecursivePartial, RecursiveRequired } from '../api/utils/types'
-import filterEdges from '../api/utils/filter-edges'
 import { BigcommerceConfig, getConfig } from '../api'
-import { categoryTreeItemFragment } from '../api/fragments/category-tree'
-
-// Get 3 levels of categories
-export const getSiteInfoQuery = /* GraphQL */ `
-  query getSiteInfo {
-    site {
-      categoryTree {
-        ...categoryTreeItem
-        children {
-          ...categoryTreeItem
-          children {
-            ...categoryTreeItem
-          }
-        }
-      }
-      brands {
-        pageInfo {
-          startCursor
-          endCursor
-        }
-        edges {
-          cursor
-          node {
-            entityId
-            name
-            defaultImage {
-              urlOriginal
-              altText
-            }
-            pageTitle
-            metaDesc
-            metaKeywords
-            searchKeywords
-            path
-          }
-        }
-      }
-    }
-  }
-  ${categoryTreeItemFragment}
-`
 
 export type CategoriesTree = NonNullable<
   GetSiteInfoQuery['site']['categoryTree']
@@ -61,24 +18,8 @@ export type GetSiteInfoResult<
   }
 > = T
 
-async function getSiteInfo(opts?: {
-  variables?: GetSiteInfoQueryVariables
-  config?: BigcommerceConfig
-  preview?: boolean
-}): Promise<GetSiteInfoResult>
-
-async function getSiteInfo<
-  T extends { categories: any[]; brands: any[] },
-  V = any
->(opts: {
-  query: string
-  variables?: V
-  config?: BigcommerceConfig
-  preview?: boolean
-}): Promise<GetSiteInfoResult<T>>
-
 async function getSiteInfo({
-  query = getSiteInfoQuery,
+  query,
   variables,
   config,
 }: {
