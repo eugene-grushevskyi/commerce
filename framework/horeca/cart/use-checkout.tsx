@@ -9,7 +9,6 @@ export default function useCheckout() {
       body: {
         ...body,
         clientId: process.env.NEXT_PUBLIC_STORE_API_CLIENT_ID,
-        owner: 'TST@fsd.com',
       },
     })
   }

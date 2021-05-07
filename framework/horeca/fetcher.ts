@@ -41,19 +41,21 @@ const fetcher: Fetcher = async ({
     'X-Auth-Token': config.storeApiToken,
     'X-Auth-Client': config.storeApiClientId,
   }
-  const res = await fetch((config.storeApiUrl + url)!, {
-    method,
-    body,
-    headers,
-    credentials: 'include',
-  })
+  try {
+    const res = await fetch((config.storeApiUrl + url)!, {
+      method,
+      body,
+      headers,
+      credentials: 'include',
+    })
 
-  if (res.ok) {
-    const { data } = await res.json()
-    return data
+    if (res.ok) {
+      const { data } = await res.json()
+      return data
+    }
+  } catch (e) {
+    throw await getError(e)
   }
-
-  throw await getError(res)
 }
 
 export default fetcher

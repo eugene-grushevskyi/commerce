@@ -4,14 +4,25 @@ import { Layout } from '@components/common'
 import { Button, Input, Text } from '@components/ui'
 import { Bag, Cross, Check, MapPin, CreditCard } from '@components/icons'
 import { CartItem } from '@components/cart'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import useCheckout from '@framework/cart/use-checkout'
+import { Product as CommerceProduct } from '@commerce/types'
 
 const PACKAGING_PRICE = 5
 const DELIVER_PRICE = 33
+type BaseProduct = {
+  count: number
+  total: number
+}
+type Product = CommerceProduct & BaseProduct
+type Order = {
+  id: string
+  products: Partial<Product[]>
+}
 export default function Checkout() {
   const [success, setSuccess] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
+  const [order, setOrder] = useState<Order>()
   const [deliver, setDeliver] = useState<boolean>(false)
   const postOrder = useCheckout()
   const [formData, setFormData] = useState<
@@ -22,6 +33,18 @@ export default function Checkout() {
       address: string
     }>
   >()
+
+  useEffect(() => {
+    const dataFromLocalStorage = localStorage.getItem('form-data')
+    if (dataFromLocalStorage) {
+      console.log('effect', dataFromLocalStorage)
+      setFormData(JSON.parse(dataFromLocalStorage))
+    }
+    return () => {
+      console.log('unmount')
+    }
+  }, [])
+
   const { data, isLoading, isEmpty } = useCart()
 
   const { price: subTotal } = usePrice(
@@ -59,6 +82,7 @@ export default function Checkout() {
   )
 
   const checkout = useCallback(async () => {
+    const packagingPrice = getPackagingPrice()
     const body = {
       initiator: 'site',
       phone: formData?.phone,
@@ -71,23 +95,33 @@ export default function Checkout() {
         total: v.variant.price * v.quantity,
       })),
       address: formData?.address,
+      deliverPrice: deliver ? DELIVER_PRICE : 0,
+      packagingPrice,
+      date: new Date().toISOString(),
     }
 
     const res = await postOrder(body)
-    console.log(res)
+
     if (!res) {
       setError(true)
     } else {
       setSuccess(true)
+      setOrder(res)
+      window.scrollTo({ top: 0 })
     }
-  }, [success])
+  }, [success, error, formData, data, deliver, order, getPackagingPrice])
 
-  const handleChange = (data: string, prop: string) => {
-    setFormData({
-      ...formData,
-      [prop]: data,
-    })
-  }
+  const handleChange = useCallback(
+    (data: any, prop: string) => {
+      const entity = {
+        ...formData,
+        [prop]: data.target?.value,
+      }
+      setFormData(entity)
+      localStorage.setItem('form-data', JSON.stringify(entity))
+    },
+    [setFormData, formData]
+  )
 
   return (
     <div className="grid lg:grid-cols-12 w-full max-w-7xl mx-auto">
@@ -107,7 +141,7 @@ export default function Checkout() {
         ) : error ? (
           <div className="flex-1 px-4 flex flex-col justify-center items-center">
             <span className="border border-white rounded-full flex items-center justify-center w-16 h-16">
-              <Cross width={24} height={24} />
+              <Cross width={24} height={24} onClick={() => setError(false)} />
             </span>
             <h2 className="pt-6 text-xl font-light text-center">
               We couldn’t process the purchase. Please check your card
@@ -122,6 +156,20 @@ export default function Checkout() {
             <h2 className="pt-6 text-xl font-light text-center">
               Дякуємо за ваше замовлення.
             </h2>
+            <p>
+              Номер вашого замовлення - <b>{order?.id}</b>
+              <p>{deliver && 'Очікуйтее доставку упродовж години'}</p>
+            </p>
+            <div>
+              {order &&
+                order.products.map((v, index) => (
+                  <div key={index + 'e'}>
+                    * {v?.name} - {v?.total}
+                  </div>
+                ))}
+            </div>
+
+            <div></div>
           </div>
         ) : (
           <div className="px-4 sm:px-6 flex-1">
@@ -155,11 +203,20 @@ export default function Checkout() {
       <div className="lg:col-span-4">
         <div className="flex-shrink-0 px-4 sm:px-6 mt-2">
           <Text className="mt-4 pb-1">Ім'я</Text>
-          <Input onChange={(e) => handleChange(e, 'name')}></Input>
+          <Input
+            defaultValue={formData?.name}
+            onBlur={(e) => handleChange(e, 'name')}
+          ></Input>
           <Text className="mt-4 pb-1">Телефон</Text>
-          <Input onChange={(e) => handleChange(e, 'phone')}></Input>
+          <Input
+            defaultValue={formData?.phone}
+            onBlur={(e) => handleChange(e, 'phone')}
+          ></Input>
           <Text className="mt-4 pb-1">Додаткові побажання?</Text>
-          <Input onChange={(e) => handleChange(e, 'description')}></Input>
+          <Input
+            defaultValue={formData?.description}
+            onBlur={(e) => handleChange(e, 'description')}
+          ></Input>
         </div>
         <div className="flex-shrink-0 px-4 py-8 sm:px-6">
           <div
@@ -181,7 +238,10 @@ export default function Checkout() {
           {deliver && (
             <div className="mb-4">
               <Text className="mt-4 pb-1">Куди доставити?</Text>
-              <Input onChange={(e) => handleChange(e, 'address')}></Input>
+              <Input
+                defaultValue={formData?.address}
+                onBlur={(e) => handleChange(e, 'address')}
+              ></Input>
             </div>
           )}
           <div
@@ -241,7 +301,12 @@ export default function Checkout() {
                   Хочу ще чогось
                 </Button>
               ) : (
-                <Button onClick={checkout} Component="a" width="100%">
+                <Button
+                  onClick={checkout}
+                  disabled={!!order}
+                  Component="a"
+                  width="100%"
+                >
                   Замовити
                 </Button>
               )}
