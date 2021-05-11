@@ -28,10 +28,10 @@ const Footer: FC<Props> = ({ className, pages }) => {
           <div className="col-span-1 lg:col-span-2">
             <Link href="/">
               <a className="flex flex-initial items-center font-bold md:mr-24">
-                <span className="rounded-full border border-gray-700 mr-2">
+                <span className="rounded-full mr-2">
                   <Logo />
                 </span>
-                <span>ACME</span>
+                <span>Mushlya</span>
               </a>
             </Link>
           </div>
@@ -40,21 +40,21 @@ const Footer: FC<Props> = ({ className, pages }) => {
               <li className="py-3 md:py-0 md:pb-4">
                 <Link href="/">
                   <a className="text-primary hover:text-accents-6 transition ease-in-out duration-150">
-                    Home
+                    Додому
                   </a>
                 </Link>
               </li>
               <li className="py-3 md:py-0 md:pb-4">
                 <Link href="/">
                   <a className="text-primary hover:text-accents-6 transition ease-in-out duration-150">
-                    Careers
+                    Вакансії
                   </a>
                 </Link>
               </li>
               <li className="py-3 md:py-0 md:pb-4">
                 <Link href="/blog">
                   <a className="text-primary hover:text-accents-6 transition ease-in-out duration-150">
-                    Blog
+                    Блог
                   </a>
                 </Link>
               </li>
@@ -82,22 +82,10 @@ const Footer: FC<Props> = ({ className, pages }) => {
               ))}
             </ul>
           </div>
-          <div className="col-span-1 lg:col-span-6 flex items-start lg:justify-end text-primary">
-            <div className="flex space-x-6 items-center h-10">
-              <a
-                aria-label="Github Repository"
-                href="https://github.com/vercel/commerce"
-                className={s.link}
-              >
-                <Github />
-              </a>
-              <I18nWidget />
-            </div>
-          </div>
         </div>
         <div className="py-12 flex flex-col md:flex-row justify-between items-center space-y-4">
           <div>
-            <span>&copy; 2020 ACME, Inc. All rights reserved.</span>
+            <span>&copy; 2020 Foods'n Booze, Inc. All rights reserved.</span>
           </div>
           <div className="flex items-center text-primary">
             <span className="text-primary">Crafted by</span>

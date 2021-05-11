@@ -4,7 +4,7 @@
   ease-linear cursor-pointer;
   height: 100% !important;
 
-  &:hover {
+
     & .squareBg:before {
       transform: scale(0.98);
     }
@@ -40,7 +40,7 @@
     &:nth-child(6n + 6) .productTitle > span,
     &:nth-child(6n + 6) .productPrice,
     &:nth-child(6n + 6) .wishlistButton {
-      @apply bg-cyan text-white;
+      @apply bg-yellow text-white;
     }
   }
 
@@ -59,7 +59,7 @@
   &:nth-child(6n + 6) .squareBg {
     @apply bg-cyan;
   }
-}
+
 
 .squareBg,
 .productTitle > span,
