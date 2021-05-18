@@ -68,14 +68,11 @@ export default function Home({
         ))}
       </Marquee>
       <Hero
-        headline="Release Details: The Yeezy BOOST 350 V2 ‘Natural'"
+        headline="Улюблені страви від Mushlya – у вас вдома"
         description="
-        The Yeezy BOOST 350 V2 lineup continues to grow. We recently had the
-        ‘Carbon’ iteration, and now release details have been locked in for
-        this ‘Natural’ joint. Revealed by Yeezy Mafia earlier this year, the
-        shoe was originally called ‘Abez’, which translated to ‘Tin’ in
-        Hebrew. It’s now undergone a name change, and will be referred to as
-        ‘Natural’."
+        1. Доставка в будь-яку точку міста
+        2. Вартість доставки - 33 гривні&nbsp;&nbsp;&nbsp;
+        3. Замовляйте щодня з 11.00 до 21.00"
       />
       <Grid layout="B">
         {products.slice(12, 15).map((product, i) => (

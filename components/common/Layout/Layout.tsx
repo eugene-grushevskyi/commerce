@@ -76,11 +76,11 @@ const Layout: FC<Props> = ({
         </Sidebar>
 
         <FeatureBar
-          title="This site uses cookies to improve your experience. By clicking, you agree to our Privacy Policy."
+          title="Для повноцінного функціонування сайту необхідно дозволити використовувати cookies."
           hide={acceptedCookies}
           action={
             <Button className="mx-5" onClick={() => onAcceptCookies()}>
-              Accept cookies
+              Дозволити
             </Button>
           }
         />

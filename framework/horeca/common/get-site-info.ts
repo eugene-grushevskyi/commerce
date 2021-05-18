@@ -1,22 +1,5 @@
-import type { GetSiteInfoQuery, GetSiteInfoQueryVariables } from '../schema'
+import type { CategoryTreeItem, GetSiteInfoQueryVariables } from '../schema'
 import { BigcommerceConfig, getConfig } from '../api'
-
-export type CategoriesTree = NonNullable<
-  GetSiteInfoQuery['site']['categoryTree']
->
-
-export type BrandEdge = NonNullable<
-  NonNullable<GetSiteInfoQuery['site']['brands']['edges']>[0]
->
-
-export type Brands = BrandEdge[]
-
-export type GetSiteInfoResult<
-  T extends { categories: any[]; brands: any[] } = {
-    categories: CategoriesTree
-    brands: Brands
-  }
-> = T
 
 async function getSiteInfo({
   query,
@@ -27,17 +10,19 @@ async function getSiteInfo({
   variables?: GetSiteInfoQueryVariables
   config?: BigcommerceConfig
   preview?: boolean
-} = {}): Promise<GetSiteInfoResult> {
+} = {}): Promise<{ categories: CategoryTreeItem[]; brands: any[] }> {
   config = getConfig(config)
   // RecursivePartial forces the method to check for every prop in the data, which is
   // required in case there's a custom `query`
-  // const { data } = await config.fetch<RecursivePartial<GetSiteInfoQuery>>(
-  //   query,
-  //   { variables }
-  // )
-
+  const { data } = await config.storeApiFetch('/api/category', {
+    method: 'GET',
+  })
   return {
-    categories: [],
+    categories: data.map((v: CategoryTreeItem | any, index: number) => ({
+      ...v,
+      path: v['_id'] as string, // v.name.replace(' ', '_').toLowerCase(),
+      entityId: index,
+    })),
     brands: [],
   }
 }

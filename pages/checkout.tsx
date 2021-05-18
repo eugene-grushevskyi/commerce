@@ -266,14 +266,14 @@ export default function Checkout() {
               </div>
             </div>
             <div className="border-t border-accents-2 mb-4 mt-4"></div>
-            <div className="rounded-md border border-accents-2 px-6 py-6 mb-4 text-center flex items-center justify-center cursor-pointer hover:border-accents-4">
+            {/* <div className="rounded-md border border-accents-2 px-6 py-6 mb-4 text-center flex items-center justify-center cursor-pointer hover:border-accents-4">
               <div className="mr-5">
                 <CreditCard />
               </div>
               <div className="text-sm text-center font-medium">
                 <span className="uppercase">Оплатити картою</span>
               </div>
-            </div>
+            </div> */}
             <div className="border-t border-accents-2">
               <ul className="py-3">
                 <li className="flex justify-between py-1">

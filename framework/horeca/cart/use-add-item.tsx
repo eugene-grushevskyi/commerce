@@ -27,7 +27,7 @@ export const handler: MutationHook<Cart, {}, CartItemBody> = {
         ...item,
       },
     })
-
+    localStorage.setItem('bc_cartId', (data as any)['_id'] as string)
     return data
   },
   useHook: ({ fetch }) => () => {

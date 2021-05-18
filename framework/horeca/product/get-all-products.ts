@@ -107,7 +107,7 @@ async function getAllProducts({
 
   return {
     products: data
-      .filter((v) => !!v.slug)
+      .filter((v) => !(!v.slug || !v.path))
       .map((v) => ProductAdapter.transform(v)),
   }
 }

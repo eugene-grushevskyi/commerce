@@ -285,6 +285,8 @@ export type CategoryTreeItem = {
   name: Scalars['String']
   /** Path assigned to this category */
   path: Scalars['String']
+  /** Photo of category */
+  imageUrl: Scalars['String']
   /** The description of this category. */
   description: Scalars['String']
   /** The number of products in this category. */

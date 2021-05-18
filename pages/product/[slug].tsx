@@ -22,7 +22,6 @@ export async function getStaticProps({
   const { product } = await getProduct({
     variables: { slug: params!.slug },
     config,
-    preview,
   })
 
   if (!product) {

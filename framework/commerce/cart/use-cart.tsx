@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie'
 import { useHook, useSWRHook } from '../utils/use-hook'
 import type { HookFetcherFn, SWRHook } from '../utils/types'
 import type { Cart } from '../types'
@@ -32,7 +31,7 @@ const useCart: UseCart = (input) => {
   const { cartCookie } = useCommerce()
   const fetcherFn = hook.fetcher ?? fetcher
   const wrapper: typeof fetcher = (context) => {
-    context.input.cartId = Cookies.get(cartCookie)
+    context.input.cartId = localStorage.getItem('bc_cartId') + ''
     return fetcherFn(context)
   }
   return useSWRHook({ ...hook, fetcher: wrapper })(input)

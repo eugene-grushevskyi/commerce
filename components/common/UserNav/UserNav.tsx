@@ -39,7 +39,7 @@ const UserNav: FC<Props> = ({ className }) => {
               </Link>
             </li>
           )}
-          <li className={s.item}>
+          {/* <li className={s.item}>
             {customer ? (
               <DropdownMenu />
             ) : (
@@ -51,7 +51,7 @@ const UserNav: FC<Props> = ({ className }) => {
                 <Avatar />
               </button>
             )}
-          </li>
+          </li> */}
         </ul>
       </div>
     </nav>

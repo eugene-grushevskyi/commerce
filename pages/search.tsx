@@ -20,10 +20,10 @@ import getSlug from '@lib/get-slug'
 
 // TODO (bc) : Remove or standarize this.
 const SORT = Object.entries({
-  'latest-desc': 'Latest arrivals',
-  'trending-desc': 'Trending',
-  'price-asc': 'Price: Low to high',
-  'price-desc': 'Price: High to low',
+  'latest-desc': 'Новинки',
+  'trending-desc': 'Популярне',
+  'price-asc': 'Ціна: спочатку дешевше',
+  'price-desc': 'Ціна: спочатку дорожчі',
 })
 
 import {
@@ -66,6 +66,7 @@ export default function Search({
   const query = filterQuery({ sort })
 
   const { pathname, category, brand } = useSearchMeta(asPath)
+
   const activeCategory = categories.find(
     (cat) => getSlug(cat.path) === category
   )
@@ -75,7 +76,7 @@ export default function Search({
 
   const { data } = useSearch({
     search: typeof q === 'string' ? q : '',
-    categoryId: activeCategory?.entityId,
+    categoryId: activeCategory?.path,
     brandId: activeBrand?.entityId,
     sort: typeof sort === 'string' ? sort : '',
   })
@@ -113,8 +114,8 @@ export default function Search({
                   aria-expanded="true"
                 >
                   {activeCategory?.name
-                    ? `Category: ${activeCategory?.name}`
-                    : 'All Categories'}
+                    ? `Категорія: ${activeCategory?.name}`
+                    : 'Всі категорії'}
                   <svg
                     className="-mr-1 ml-2 h-5 w-5"
                     xmlns="http://www.w3.org/2000/svg"
@@ -144,27 +145,6 @@ export default function Search({
                   aria-labelledby="options-menu"
                 >
                   <ul>
-                    <li
-                      className={cn(
-                        'block text-sm leading-5 text-gray-700 lg:text-base lg:no-underline lg:font-bold lg:tracking-wide hover:bg-gray-100 lg:hover:bg-transparent hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900',
-                        {
-                          underline: !activeCategory?.name,
-                        }
-                      )}
-                    >
-                      <Link
-                        href={{ pathname: getCategoryPath('', brand), query }}
-                      >
-                        <a
-                          onClick={(e) => handleClick(e, 'categories')}
-                          className={
-                            'block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4'
-                          }
-                        >
-                          All Categories
-                        </a>
-                      </Link>
-                    </li>
                     {categories.map((cat) => (
                       <li
                         key={cat.path}
@@ -189,108 +169,6 @@ export default function Search({
                             }
                           >
                             {cat.name}
-                          </a>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Designs */}
-          <div className="relative inline-block w-full">
-            <div className="lg:hidden mt-3">
-              <span className="rounded-md shadow-sm">
-                <button
-                  type="button"
-                  onClick={(e) => handleClick(e, 'brands')}
-                  className="flex justify-between w-full rounded-sm border border-gray-300 px-4 py-3 bg-white text-sm leading-5 font-medium text-gray-900 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-normal active:bg-gray-50 active:text-gray-800 transition ease-in-out duration-150"
-                  id="options-menu"
-                  aria-haspopup="true"
-                  aria-expanded="true"
-                >
-                  {activeBrand?.name
-                    ? `Design: ${activeBrand?.name}`
-                    : 'All Designs'}
-                  <svg
-                    className="-mr-1 ml-2 h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </span>
-            </div>
-            <div
-              className={`origin-top-left absolute lg:relative left-0 mt-2 w-full rounded-md shadow-lg lg:shadow-none z-10 mb-10 lg:block ${
-                activeFilter !== 'brands' || toggleFilter !== true
-                  ? 'hidden'
-                  : ''
-              }`}
-            >
-              <div className="rounded-sm bg-white shadow-xs lg:bg-none lg:shadow-none">
-                <div
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="options-menu"
-                >
-                  <ul>
-                    <li
-                      className={cn(
-                        'block text-sm leading-5 text-gray-700 lg:text-base lg:no-underline lg:font-bold lg:tracking-wide hover:bg-gray-100 lg:hover:bg-transparent hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900',
-                        {
-                          underline: !activeBrand?.name,
-                        }
-                      )}
-                    >
-                      <Link
-                        href={{
-                          pathname: getDesignerPath('', category),
-                          query,
-                        }}
-                      >
-                        <a
-                          onClick={(e) => handleClick(e, 'brands')}
-                          className={
-                            'block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4'
-                          }
-                        >
-                          All Designers
-                        </a>
-                      </Link>
-                    </li>
-                    {brands.flatMap(({ node }) => (
-                      <li
-                        key={node.path}
-                        className={cn(
-                          'block text-sm leading-5 text-gray-700 hover:bg-gray-100 lg:hover:bg-transparent hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900',
-                          {
-                            // @ts-ignore Shopify - Fix this types
-                            underline: activeBrand?.entityId === node.entityId,
-                          }
-                        )}
-                      >
-                        <Link
-                          href={{
-                            pathname: getDesignerPath(node.path, category),
-                            query,
-                          }}
-                        >
-                          <a
-                            onClick={(e) => handleClick(e, 'brands')}
-                            className={
-                              'block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4'
-                            }
-                          >
-                            {node.name}
                           </a>
                         </Link>
                       </li>
@@ -340,10 +218,10 @@ export default function Search({
                 </>
               ) : q ? (
                 <>
-                  Searching for: "<strong>{q}</strong>"
+                  Пошук для: "<strong>{q}</strong>"
                 </>
               ) : (
-                <>Searching...</>
+                <>Пошук...</>
               )}
             </div>
           )}
@@ -389,7 +267,7 @@ export default function Search({
                   aria-haspopup="true"
                   aria-expanded="true"
                 >
-                  {sort ? `Sort: ${sort}` : 'Relevance'}
+                  {sort ? `Сортувати: ${sort}` : 'Популярне'}
                   <svg
                     className="-mr-1 ml-2 h-5 w-5"
                     xmlns="http://www.w3.org/2000/svg"
@@ -432,7 +310,7 @@ export default function Search({
                             'block lg:inline-block px-4 py-2 lg:p-0 lg:my-2 lg:mx-4'
                           }
                         >
-                          Relevance
+                          За популярністю
                         </a>
                       </Link>
                     </li>

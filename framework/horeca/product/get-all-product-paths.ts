@@ -1,14 +1,9 @@
 import { Product, ProductAdapter } from '@commerce/types'
 import { BigcommerceConfig, getConfig } from '../api'
-import type { GetAllProductPathsQueryVariables } from '../schema'
 
 async function getAllProductPaths({
-  query,
-  variables,
   config,
 }: {
-  query?: string
-  variables?: GetAllProductPathsQueryVariables
   config?: BigcommerceConfig
 } = {}): Promise<any> {
   config = getConfig(config)
