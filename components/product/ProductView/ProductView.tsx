@@ -147,7 +147,7 @@ const ProductView: FC<Props> = ({ product }) => {
               onClick={addToCart}
               loading={loading}
             >
-              Add to Cart
+              Додати в кошик
             </Button>
           </div>
         </div>

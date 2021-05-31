@@ -81,7 +81,7 @@
   text-align: center;
   width: 100%;
   max-width: 300px;
-
+  background-color: var(--pink);
   @screen sm {
     min-width: 300px;
   }

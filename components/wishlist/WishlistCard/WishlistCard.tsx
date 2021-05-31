@@ -83,7 +83,7 @@ const WishlistCard: FC<Props> = ({ product }) => {
           onClick={addToCart}
           loading={loading}
         >
-          Add to Cart
+          Додати в кошик
         </Button>
       </div>
       <div className="col-span-2 flex flex-col justify-between">

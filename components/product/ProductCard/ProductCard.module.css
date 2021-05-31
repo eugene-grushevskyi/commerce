@@ -3,7 +3,7 @@
   bg-no-repeat bg-center bg-cover transition-transform
   ease-linear cursor-pointer;
   height: 100% !important;
-
+  padding: 0;
 
     & .squareBg:before {
       transform: scale(0.98);

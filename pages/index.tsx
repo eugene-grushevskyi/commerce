@@ -1,5 +1,5 @@
 import { Layout } from '@components/common'
-import { Grid, Marquee, Hero } from '@components/ui'
+import { Grid, Marquee, Hero, Button } from '@components/ui'
 import { ProductCard } from '@components/product'
 // import HomeAllProductsGrid from '@components/common/HomeAllProductsGrid'
 import type { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
@@ -8,6 +8,9 @@ import { getConfig } from '@framework/api'
 import getAllProducts from '@framework/product/get-all-products'
 import getSiteInfo from '@framework/common/get-site-info'
 import getAllPages from '@framework/common/get-all-pages'
+import Link from 'next/dist/client/link'
+import s from '@components/common/Navbar/Navbar.module.css'
+import React from 'react'
 
 export async function getStaticProps({
   preview,
@@ -42,6 +45,13 @@ export default function Home({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
+      <div className="mb-4 flex flex-column align-items-center lg:hidden">
+        <Link href="/search">
+          <Button aria-label="До Меню" className={s.button}>
+            До Меню
+          </Button>
+        </Link>
+      </div>
       <Grid>
         {products.slice(0, 3).map((product, i) => (
           <ProductCard
@@ -54,25 +64,15 @@ export default function Home({
           />
         ))}
       </Grid>
-      <Marquee variant="secondary">
-        {products.slice(4, 7).map((product, i) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            variant="slim"
-            imgProps={{
-              width: 320,
-              height: 320,
-            }}
-          />
-        ))}
-      </Marquee>
       <Hero
         headline="Улюблені страви від Mushlya – у вас вдома"
         description="
-        1. Доставка в будь-яку точку міста
-        2. Вартість доставки - 33 гривні&nbsp;&nbsp;&nbsp;
-        3. Замовляйте щодня з 11.00 до 21.00"
+        <ul>
+          <li>1. Доставка в будь-яку точку міста</li>
+          <li>2. Вартість доставки - 33 гривні</li>
+          <li>3. Замовляйте щодня з 11.00 до 21.00</li>
+        </ul>
+        "
       />
       <Grid layout="B">
         {products.slice(12, 15).map((product, i) => (
@@ -93,17 +93,12 @@ export default function Home({
             product={product}
             variant="slim"
             imgProps={{
-              width: 320,
+              width: 420,
               height: 320,
             }}
           />
         ))}
       </Marquee>
-      {/* <HomeAllProductsGrid
-        newestProducts={products}
-        categories={categories}
-        brands={brands}
-      /> */}
     </>
   )
 }

@@ -133,3 +133,11 @@ a {
   border-color:  #7048e8 !important;
   color: #7048e8;
 }
+
+.flex-column{
+  flex-direction: column;
+}
+
+.align-items-center{
+  align-items: center;
+}
